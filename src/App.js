@@ -123,13 +123,12 @@ class App extends Component {
 
   renderAuthenticated = () => {
     return (
-      <p>Authenticated!</p>
+      <CreateConsignment token={this.state.token}/>
     );
   }
 
   render() {
     const { authenticated, } = this.state;
-    console.log(authenticated);
     return (
       <div className="App">
         <div className="App-header">
