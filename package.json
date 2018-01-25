@@ -1,5 +1,5 @@
 {
-  "name": "shippy-user-ui",
+  "name": "shippy-ui",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
