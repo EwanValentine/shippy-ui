@@ -14,6 +14,9 @@ class CreateConsignment extends React.Component {
     const consignment = this.state;
     fetch(`http://localhost:8080/consignment/create`, {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(_.omit(consignment, 'created')),
     })
     .then(res => res.json())
@@ -24,25 +27,42 @@ class CreateConsignment extends React.Component {
     });
   }
 
-  addContainer = e => {}
+  addContainer = e => {
+    this.setState({
+      containers: [...this.state.containers, e.target.value],
+    });
+  }
 
-  setDescription = e => {}
+  setDescription = e => {
+    this.setState({
+      description: e.target.value,
+    });
+  }
 
-  setWeight = e => {}
+  setWeight = e => {
+    this.setState({
+      weight: e.target.value,
+    });
+  }
 
   render() {
     return (
-      <div className='consignment-form'>
+      <div className='consignment-form container'>
+        <br />
         <div className='form-group'>
           <textarea className='form-control' placeholder='Description'></textarea>
         </div>
         <div className='form-group'>
-          <input type='number' placeholder='weight' />
+          <input type='number' placeholder='Weight' className='form-control' />
         </div>
         <div className='form-control'>
           Add containers...
         </div>
+        <br />
+        <button onClick={this.create} className='btn btn-primary'>Create</button>
       </div>
     );
   }
 }
+
+export default CreateConsignment;
