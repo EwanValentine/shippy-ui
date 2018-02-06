@@ -12,14 +12,18 @@ class App extends Component {
   }
 
   login = () => {
-    fetch(`http://localhost:8080/auth/auth`, {
+    fetch(`http://localhost:8080/rpc`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        email: this.state.email,
-        password: this.state.password,
+        request: {
+          email: this.state.email,
+          password: this.state.password,
+        },
+        service: 'shippy.auth',
+        method: 'Auth.Auth',
       }),
     })
     .then(res => res.json())
@@ -33,19 +37,23 @@ class App extends Component {
   }
 
   signup = () => {
-    fetch(`http://localhost:8080/auth/create`, {
+    fetch(`http://localhost:8080/rpc`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        email: this.state.email,
-        password: this.state.password,
-        name: this.state.name,
+        request: {
+          email: this.state.email,
+          password: this.state.password,
+          name: this.state.name,
+        },
+        method: 'Auth.Create',
+        service: 'shippy.auth',
       }),
     })
-    .then(res => res.json())
-    .then(res => {
+    .then((res) => res.json())
+    .then((res) => {
       this.setState({
         token: res.token,
         authenticated: true,
