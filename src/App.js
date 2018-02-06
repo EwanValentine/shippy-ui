@@ -55,9 +55,10 @@ class App extends Component {
     .then((res) => res.json())
     .then((res) => {
       this.setState({
-        token: res.token,
+        token: res.token.token,
         authenticated: true,
       });
+      localStorage.setItem('token', res.token.token);
     })
     .catch(err => this.setState({ err, authenticated: false, }));
   }
