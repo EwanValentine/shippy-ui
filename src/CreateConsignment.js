@@ -45,13 +45,14 @@ class CreateConsignment extends React.Component {
       body: JSON.stringify({
         service: 'shippy.consignment',
         method: 'ConsignmentService.Create',
-        request: _.omit(consignment, 'created'),
+        request: _.omit(consignment, 'created', 'consignments'),
       }),
     })
     .then((res) => res.json())
     .then((res) => {
       this.setState({
         created: res.created,
+        consignments: [...this.state.consignments, consignment],
       });
     });
   }
@@ -70,7 +71,7 @@ class CreateConsignment extends React.Component {
 
   setWeight = e => {
     this.setState({
-      weight: e.target.value,
+      weight: Number(e.target.value),
     });
   }
 
@@ -81,18 +82,20 @@ class CreateConsignment extends React.Component {
         <div className='consignment-form container'>
           <br />
           <div className='form-group'>
-            <textarea className='form-control' placeholder='Description'></textarea>
+            <textarea onChange={this.setDescription} className='form-control' placeholder='Description'></textarea>
           </div>
           <div className='form-group'>
-            <input type='number' placeholder='Weight' className='form-control' />
+            <input onChange={this.setWeight} type='number' placeholder='Weight' className='form-control' />
           </div>
           <div className='form-control'>
             Add containers...
           </div>
           <br />
           <button onClick={this.create} className='btn btn-primary'>Create</button>
+          <br />
+          <hr />
         </div>
-        {(consignments.length > 0
+        {(consignments && consignments.length > 0
           ? <div className='consignment-list'>
               <h2>Consignments</h2>
               {consignments.map((item) => (
@@ -101,6 +104,7 @@ class CreateConsignment extends React.Component {
                   <p>Consignment id: {item.id}</p>
                   <p>Description: {item.description}</p>
                   <p>Weight: {item.weight}</p>
+                  <hr />
                 </div>
               ))}
             </div>
