@@ -1,26 +1,55 @@
 import React from 'react';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 class CreateConsignment extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
 
   state = {
     created: false,
     description: '',
     weight: 0,
     containers: [],
+    consignments: [],
   }
 
-  create = () => {
-    const consignment = this.state;
-    fetch(`http://localhost:8080/consignment/create`, {
+  componentWillMount() {
+    fetch(`http://localhost:8080/rpc`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(_.omit(consignment, 'created')),
+      body: JSON.stringify({
+        service: 'shippy.consignment',
+        method: 'ConsignmentService.Get',
+        request: {},
+      })
     })
-    .then(res => res.json())
-    .then(res => {
+    .then(req => req.json())
+    .then((res) => {
+      this.setState({
+        consignments: res.consignments,
+      });
+    });
+  }
+
+  create = () => {
+    const consignment = this.state;
+    fetch(`http://localhost:8080/rpc`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        service: 'shippy.consignment',
+        method: 'ConsignmentService.Create',
+        request: _.omit(consignment, 'created'),
+      }),
+    })
+    .then((res) => res.json())
+    .then((res) => {
       this.setState({
         created: res.created,
       });
@@ -46,20 +75,36 @@ class CreateConsignment extends React.Component {
   }
 
   render() {
+    const { consignments, } = this.state;
     return (
-      <div className='consignment-form container'>
-        <br />
-        <div className='form-group'>
-          <textarea className='form-control' placeholder='Description'></textarea>
+      <div className='consignment-screen'>
+        <div className='consignment-form container'>
+          <br />
+          <div className='form-group'>
+            <textarea className='form-control' placeholder='Description'></textarea>
+          </div>
+          <div className='form-group'>
+            <input type='number' placeholder='Weight' className='form-control' />
+          </div>
+          <div className='form-control'>
+            Add containers...
+          </div>
+          <br />
+          <button onClick={this.create} className='btn btn-primary'>Create</button>
         </div>
-        <div className='form-group'>
-          <input type='number' placeholder='Weight' className='form-control' />
-        </div>
-        <div className='form-control'>
-          Add containers...
-        </div>
-        <br />
-        <button onClick={this.create} className='btn btn-primary'>Create</button>
+        {(consignments.length > 0
+          ? <div className='consignment-list'>
+              <h2>Consignments</h2>
+              {consignments.map((item) => (
+                <div>
+                  <p>Vessel id: {item.vessel_id}</p>
+                  <p>Consignment id: {item.id}</p>
+                  <p>Description: {item.description}</p>
+                  <p>Weight: {item.weight}</p>
+                </div>
+              ))}
+            </div>
+          : false)}
       </div>
     );
   }
