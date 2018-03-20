@@ -49,7 +49,7 @@ class App extends Component {
           name: this.state.name,
         },
         method: 'Auth.Create',
-        service: 'shippy.auth',
+        service: 'auth',
       }),
     })
     .then((res) => res.json())

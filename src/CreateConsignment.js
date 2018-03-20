@@ -16,10 +16,12 @@ class CreateConsignment extends React.Component {
   }
 
   componentWillMount() {
+    const token = localStorage.getItem('token');
     fetch(`http://localhost:8080/rpc`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify({
         service: 'shippy.consignment',
@@ -37,10 +39,12 @@ class CreateConsignment extends React.Component {
 
   create = () => {
     const consignment = this.state;
+    const token = localStorage.getItem('token');
     fetch(`http://localhost:8080/rpc`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify({
         service: 'shippy.consignment',
