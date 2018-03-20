@@ -1,8 +1,10 @@
-import React, { Component } from 'react';
-import './App.css';
-import CreateConsignment from './CreateConsignment';
+import React from 'react';
 
-class App extends Component {
+class Authenticate extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
 
   state = {
     authenticated: false,
@@ -28,6 +30,7 @@ class App extends Component {
     })
     .then(res => res.json())
     .then(res => {
+      this.props.onAuth(res.token);
       this.setState({
         token: res.token,
         authenticated: true,
@@ -54,6 +57,7 @@ class App extends Component {
     })
     .then((res) => res.json())
     .then((res) => {
+      this.props.onAuth(res.token.token);
       this.setState({
         token: res.token.token,
         authenticated: true,
@@ -81,10 +85,9 @@ class App extends Component {
     });
   }
 
-  renderLogin = () => {
+  render() {
     return (
-      <div className="App-intro container">
-        <br />
+      <div className='Authenticate'>
         <div className='Login'>
           <div className='form-group'>
             <input
@@ -130,38 +133,6 @@ class App extends Component {
       </div>
     );
   }
-
-  renderAuthenticated = () => {
-    return (
-      <CreateConsignment token={this.state.token} />
-    );
-  }
-
-  setToken = (token) => {
-    localStorage.setItem('token', token);
-  }
-
-  getToken = () => {
-    return localStorage.getItem('token');
-  }
-
-  isAuthenticated = () => {
-    return this.state.token || this.getToken() || false;
-  }
-
-  render() {
-    const authenticated = this.isAuthenticated();
-    return (
-      <div className="App">
-        <div className="App-header">
-          <h2>Shippy</h2>
-        </div>
-        <div>
-          {(authenticated ? this.renderAuthenticated() : this.renderLogin())}
-        </div>
-      </div>
-    );
-  }
 }
 
-export default App;
+export default Authenticate;
